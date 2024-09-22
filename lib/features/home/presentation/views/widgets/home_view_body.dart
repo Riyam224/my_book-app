@@ -2,6 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:my_book/core/utils/assets.dart';
+import 'package:my_book/features/home/presentation/manager/newest_books_cubit/newest_books_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_book/features/home/presentation/views/widgets/custom_error_widget.dart';
+import 'package:my_book/features/home/presentation/views/widgets/custom_loading_indicator.dart';
 
 class HomeViewBody extends StatelessWidget {
   const HomeViewBody({super.key});
@@ -225,27 +229,37 @@ class BooksItem extends StatelessWidget {
     );
   }
 }
-// todo book grid view
+// todo book grid view and cubit
 
 class BooksGridView extends StatelessWidget {
   const BooksGridView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 252,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        // physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: 3,
-        itemBuilder: (BuildContext context, int index) {
-          return const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
-            child: BooksItem(),
+    return BlocBuilder<NewestBooksCubit, NewestBooksState>(
+      builder: (context, state) {
+        if (state is NewestBooksSuccess) {
+          return SizedBox(
+            height: 252,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              // physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: 3,
+              itemBuilder: (BuildContext context, int index) {
+                return const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: BooksItem(),
+                );
+              },
+            ),
           );
-        },
-      ),
+        } else if (state is NewestBooksFailure) {
+          return CustomErrorWidget(errMessage: state.errMessage);
+        } else {
+          return CustomLoadingIndicator();
+        }
+      },
     );
   }
 }
