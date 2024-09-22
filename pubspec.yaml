@@ -36,6 +36,7 @@ dev_dependencies:
   dartz: ^0.10.1
   dio: ^5.7.0
   equatable: ^2.0.5
+  flutter_bloc: ^8.1.6
   flutter_lints: ^4.0.0
   flutter_svg: ^2.0.10+1
   flutter_test:
